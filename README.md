@@ -21,4 +21,4 @@ color: UuidToHsl.getColorFromUUID(_uuid)
 ^ will return Color object with hue generated from uuid and use default values of alpha of 0.9, saturation of 0.9, and lightness of 0.35.
 
 It should return a fairly uniform distribution. Example of 300 generated colors:
-![color_distribution](https://github.com/merkator95/uid_to_hsl/blob/master/hue-distribution.png)
+![color_distribution](https://github.com/merkator95/uuid_to_hsl/blob/master/hue-distribution.png)
