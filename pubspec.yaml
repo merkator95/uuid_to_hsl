@@ -1,5 +1,5 @@
 name: uuid_to_hsl
-description: A new Flutter package project.
+description: Flutter plugin to get a color from a UUID in HSL color space.
 repository: https://github.com/merkator95/uuid_to_hsl
 version: 0.0.1
 homepage:
