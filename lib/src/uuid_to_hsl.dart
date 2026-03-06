@@ -17,7 +17,20 @@ class _HslParts {
   final double lightness;
 }
 
+/// Generates deterministic HSL-based colours from UUIDs or arbitrary strings.
+///
+/// The same input always produces the same colour. You can optionally:
+/// - constrain saturation and lightness to a given range, and
+/// - avoid a band around a specific brand hue.
 class UuidToHsl {
+  /// Creates a new [UuidToHsl] generator.
+  ///
+  /// - [brandHue]: centre of the hue band to avoid (in degrees), or `null`
+  ///   to allow the full hue circle.
+  /// - [avoidDeg]: half-width (in degrees) of the band around [brandHue]
+  ///   to keep generated hues out of.
+  /// - [sMin]/[sMax]: saturation range used when sampling from the hash.
+  /// - [lMin]/[lMax]: lightness range used when sampling from the hash.
   const UuidToHsl({
     this.brandHue,
     this.avoidDeg = 22,
@@ -26,59 +39,79 @@ class UuidToHsl {
     this.lMin = 0.5,
     this.lMax = 0.6,
   }) : assert(
-          avoidDeg >= 0 && avoidDeg <= 180,
-          'avoidDeg must be in [0, 180]',
-        ),
-        assert(
-          sMin >= 0 && sMin <= 1,
-          'sMin must be in [0, 1]',
-        ),
-        assert(
-          sMax >= 0 && sMax <= 1,
-          'sMax must be in [0, 1]',
-        ),
-        assert(
-          sMin <= sMax,
-          'sMin must be <= sMax',
-        ),
-        assert(
-          lMin >= 0 && lMin <= 1,
-          'lMin must be in [0, 1]',
-        ),
-        assert(
-          lMax >= 0 && lMax <= 1,
-          'lMax must be in [0, 1]',
-        ),
-        assert(
-          lMin <= lMax,
-          'lMin must be <= lMax',
-        ),
-        assert(
-          brandHue == null || (brandHue >= 0 && brandHue < 360),
-          'brandHue must be null or in [0, 360)',
-        );
+         avoidDeg >= 0 && avoidDeg <= 180,
+         'avoidDeg must be in [0, 180]',
+       ),
+       assert(
+         sMin >= 0 && sMin <= 1,
+         'sMin must be in [0, 1]',
+       ),
+       assert(
+         sMax >= 0 && sMax <= 1,
+         'sMax must be in [0, 1]',
+       ),
+       assert(
+         sMin <= sMax,
+         'sMin must be <= sMax',
+       ),
+       assert(
+         lMin >= 0 && lMin <= 1,
+         'lMin must be in [0, 1]',
+       ),
+       assert(
+         lMax >= 0 && lMax <= 1,
+         'lMax must be in [0, 1]',
+       ),
+       assert(
+         lMin <= lMax,
+         'lMin must be <= lMax',
+       ),
+       assert(
+         brandHue == null || (brandHue >= 0 && brandHue < 360),
+         'brandHue must be null or in [0, 360)',
+       );
 
+  /// Optional hue (in degrees) to avoid around the colour wheel.
   final double? brandHue;
+
+  /// Half-width of the hue band to avoid around [brandHue], in degrees.
   final double avoidDeg;
 
+  /// Minimum saturation used when sampling from the hash.
   final double sMin;
+
+  /// Maximum saturation used when sampling from the hash.
   final double sMax;
+
+  /// Minimum lightness used when sampling from the hash.
   final double lMin;
+
+  /// Maximum lightness used when sampling from the hash.
   final double lMax;
 
+  /// Returns an [HSLColor] deterministically derived from [uuid].
+  ///
+  /// The result uses `alpha = 1` and the configured saturation/lightness
+  /// ranges on this instance.
   HSLColor hslColorFromUuid(String uuid) {
     final parts = _partsFor(uuid);
     return HSLColor.fromAHSL(1, parts.hue, parts.saturation, parts.lightness);
   }
 
+  /// Returns a [Color] deterministically derived from [uuid].
+  ///
+  /// This is equivalent to `hslColorFromUuid(uuid).toColor()`.
   Color colorFromUuid(String uuid) {
     return hslColorFromUuid(uuid).toColor();
   }
 
+  /// Returns the hue component (in degrees, `0 <= hue < 360`) for [uuid].
   double getHueFromUuid(String uuid) => _partsFor(uuid).hue;
 
+  /// Returns the saturation component (`0 <= s <= 1`) for [uuid].
   double getSatFromUuid(String uuid) => _partsFor(uuid).saturation;
 
+  /// Returns the lightness component (`0 <= l <= 1`) for [uuid].
   double getLightFromUuid(String uuid) => _partsFor(uuid).lightness;
 
   _HslParts _partsFor(String value) {
@@ -176,11 +209,17 @@ class UuidToHsl {
     return (pushed % 360 + 360) % 360;
   }
 
-  @deprecated
+  /// Legacy v0 API: returns a [Color] derived from [uuid] using the original
+  /// 0.0.1 implementation.
+  @Deprecated('Prefer colorFromUuid on an instance of UuidToHsl.')
   static Color getColorFromUUID(String uuid) =>
       _UuidToHslV1.getColorFromUUID(uuid);
 
-  @deprecated
+  /// Legacy v0 API: returns an [HSLColor] derived from [uuid] using the
+  /// original 0.0.1 implementation.
+  ///
+  /// Prefer [hslColorFromUuid] on an instance of [UuidToHsl].
+  @Deprecated('Prefer [hslColorFromUuid] on an instance of [UuidToHsl].')
   static HSLColor getHSLColorFromUUID(
     String uuid,
     double alpha,
