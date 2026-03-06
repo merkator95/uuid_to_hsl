@@ -3,9 +3,9 @@ part of 'uuid_to_hsl.dart';
 /// Old implementation of the package - 0.0.1
 class _UuidToHslV1 {
   static Color getColorFromUUID(String uuid) {
-    double hue = _getHueFromUuid(uuid);
-    HSLColor hslColor = HSLColor.fromAHSL(0.9, hue, 0.9, 0.35);
-    Color color = hslColor.toColor();
+    final hue = _getHueFromUuid(uuid);
+    final hslColor = HSLColor.fromAHSL(0.9, hue, 0.9, 0.35);
+    final color = hslColor.toColor();
     return color;
   }
 
@@ -15,8 +15,8 @@ class _UuidToHslV1 {
     double saturation,
     double lightness,
   ) {
-    double hue = _getHueFromUuid(uuid);
-    HSLColor hslColor = HSLColor.fromAHSL(0.9, hue, 0.9, 0.35);
+    final hue = _getHueFromUuid(uuid);
+    final hslColor = HSLColor.fromAHSL(0.9, hue, 0.9, 0.35);
     return hslColor;
   }
 
@@ -31,17 +31,18 @@ class _UuidToHslV1 {
     // Now we need a random value generated from those two bytes.
     // Multiplying or summing them will not work, as product or sum will
     // have a normal distribution.
-    // Hence, we need to use a trigonometric function and calulate the angle
+    // Hence, we need to use a trigonometric function and calculate the angle
     // between the two bytes using arctangens.
-    double angle = atan(secondCharByte / lastCharByte);
+    final angle = atan(secondCharByte / lastCharByte);
     // the arctangens can have a min val of -pi/2 and a max val of pi/2 theoretically
-    // in practice with positive integers [1,16] it will be between ¬4 and ¬86 degrees.
+    // in practice with positive integers [1,16] it will be between
+    //¬4 and ¬86 degrees.
     // The distribution of angles between 4 and 86 should be much more uniform,
     // given produced from two random integers between 1 and 16.
 
     // Now we need to convert the angle to a hue value.
     // Hue value is between 0 and 360 in Flutter.
-    double hue = (angle * 229.3);
+    final hue = angle * 229.3;
 
     return hue;
   }
