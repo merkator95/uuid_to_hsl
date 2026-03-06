@@ -125,3 +125,5 @@ build/
 **/ios/ServiceDefinitions.json
 **/ios/Runner/GeneratedPluginRegistrant.*
 
+# FVM Version Cache
+.fvm/
