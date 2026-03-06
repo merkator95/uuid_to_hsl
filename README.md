@@ -1,24 +1,67 @@
 ## Features
 
-This package can generate a color for given UUID v4. The color will always be the same, given the same UUID.
+Deterministic HSL colours from UUIDs (or any string).
 
-It uses two bytes from UUID to generate a color by generating a random hue value in HSL color space.
+- same input → same colour.
+- returns Flutter `Color` / `HSLColor`.
+- control saturation, lightness and brand‑hue avoidance.
 
-Method `getColorFromUuid` returns a `Color` object.
-
-If you want to modify other HSL values of the returned Color you can use `getHSLColorFromUUID` method.
-
-Example use:
+### Basic use
 
 ```dart
-color: UuidToHsl.getHSLColorFromUUID(_uuid, 0.7, 0.8, 0.9).toColor()
+import 'package:uuid_to_hsl/uuid_to_hsl.dart';
+
+const generator = UuidToHsl();
+
+final color = generator.colorFromUuid(someUuid);      // Flutter Color
+final hsl   = generator.hslColorFromUuid(someUuid);  // HSLColor
+
+final hue = generator.getHueFromUuid(someUuid);      // double 0–360
+final sat = generator.getSatFromUuid(someUuid);      // double 0–1
+final light = generator.getLightFromUuid(someUuid);  // double 0–1
 ```
-^ will return Color object with alpha of 0.7, saturation of 0.8, and lightness of 0.9 and random hue value generated for the given uuid.
+
+### Configuration
 
 ```dart
-color: UuidToHsl.getColorFromUUID(_uuid)
+const generator = UuidToHsl(
+  brandHue: 170,
+  avoidDeg: 30,
+  sMin: 0.5,
+  sMax: 0.7,
+  lMin: 0.45,
+  lMax: 0.65,
+);
 ```
-^ will return Color object with hue generated from uuid and use default values of alpha of 0.9, saturation of 0.9, and lightness of 0.35.
 
-It should return a fairly uniform distribution. Example of 300 generated colors:
-![color_distribution](https://github.com/merkator95/uuid_to_hsl/blob/master/hue-distribution.png)
+`brandHue`/`avoidDeg` avoid a specific hue band; `sMin`/`sMax`/`lMin`/`lMax` set saturation/lightness ranges.
+
+
+
+### Example app & colour distribution
+
+Flutter example in `example/`:
+
+- Grid of UUID‑based colours with tooltips.
+- Export current grid as PNG + CSV.
+
+
+
+It should produce a fairly uniform distribution over the hue circle. An example of 300 generated colours:
+
+![color_distribution](https://github.com/merkator95/uuid_to_hsl/blob/master/uuid_colors_300.png)
+
+### Legacy (0.0.1) API
+
+```dart
+final color = UuidToHsl.getColorFromUUID(uuid);
+
+final hsl = UuidToHsl.getHSLColorFromUUID(
+  uuid,
+  0.7,
+  0.8,
+  0.9,
+);
+```
+
+These static methods are **deprecated** and keep the original 0.0.1 behaviour - same colours will be generated.
