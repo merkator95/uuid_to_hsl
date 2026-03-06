@@ -25,7 +25,38 @@ class UuidToHsl {
     this.sMax = 0.55,
     this.lMin = 0.5,
     this.lMax = 0.6,
-  });
+  }) : assert(
+          avoidDeg >= 0 && avoidDeg <= 180,
+          'avoidDeg must be in [0, 180]',
+        ),
+        assert(
+          sMin >= 0 && sMin <= 1,
+          'sMin must be in [0, 1]',
+        ),
+        assert(
+          sMax >= 0 && sMax <= 1,
+          'sMax must be in [0, 1]',
+        ),
+        assert(
+          sMin <= sMax,
+          'sMin must be <= sMax',
+        ),
+        assert(
+          lMin >= 0 && lMin <= 1,
+          'lMin must be in [0, 1]',
+        ),
+        assert(
+          lMax >= 0 && lMax <= 1,
+          'lMax must be in [0, 1]',
+        ),
+        assert(
+          lMin <= lMax,
+          'lMin must be <= lMax',
+        ),
+        assert(
+          brandHue == null || (brandHue >= 0 && brandHue < 360),
+          'brandHue must be null or in [0, 360)',
+        );
 
   final double? brandHue;
   final double avoidDeg;
