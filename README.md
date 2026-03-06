@@ -64,4 +64,4 @@ final hsl = UuidToHsl.getHSLColorFromUUID(
 );
 ```
 
-These static methods are **deprecated** and keep the original 0.0.1 behaviour.
+These static methods are **deprecated** and keep the original 0.0.1 behaviour - same colours will be generated.
